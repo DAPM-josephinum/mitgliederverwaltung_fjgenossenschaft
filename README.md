@@ -1,80 +1,55 @@
-# C.A.R.E – Mitgliederverwaltung der FJ Genossenschaft
+# Mitgliederverwaltung FJ Genossenschaft
 
-Schulprojekt BW · HBLFA Francisco Josephinum Wieselburg
+Schulprojekt DAPM · HBLFA Francisco Josephinum Wieselburg · 30.11.2026 bis 26.3.2027
 
-Desktop-Programm (Python, PyQt5, SQLite) zur Verwaltung der Mitglieder: An- und Abmeldungen,
-Import der Klassenlisten aus Excel, IBAN-Prüfung, Liste der Ausgetretenen und Auswertungen
-für die Prüfung durch den Revisionsverband.
+Webanwendung in C# (.NET 10, ASP.NET Core mit Blazor, SQLite), mit der die FJ Genossenschaft
+Ein- und Austritte, Geschäftsanteile, Auswertungen für die Revision, Mitgliederinfos mit Kalender
+und Geschenkkorb-Bestellungen verwaltet.
+
+> **Stand:** AP-00 Vorbereitung. Es gibt noch keinen Code. Das Grundgerüst entsteht in AP-01.
+
+## Wo steht was?
+
+| Was | Wo |
+|---|---|
+| Backlog (Arbeitspakete, Aufgaben, Fehler) | [Issues](https://github.com/DAPM-josephinum/mitgliederverwaltung_fjgenossenschaft/issues) |
+| Was als Nächstes dran ist | [Issues nach Milestone](https://github.com/DAPM-josephinum/mitgliederverwaltung_fjgenossenschaft/milestones?direction=asc&sort=due_date) |
+| Offene Fragen an Genossenschaft, Lehrkraft, Schul-IT | [Issues mit `typ:offener-punkt`](https://github.com/DAPM-josephinum/mitgliederverwaltung_fjgenossenschaft/issues?q=is%3Aopen+label%3Atyp%3Aoffener-punkt) |
+| Anforderungen F-01 bis F-42, N-01 bis N-08, S-01 bis S-09 | [docs/ANFORDERUNGEN.md](docs/ANFORDERUNGEN.md) |
+| Testfälle T-01 bis T-18 | [docs/TESTFAELLE.md](docs/TESTFAELLE.md) |
+| Wie wir arbeiten (Branches, Pull Requests, Review) | [docs/ARBEITSWEISE.md](docs/ARBEITSWEISE.md) |
+
+Der Projektplan selbst (Word-Dokument) wird außerhalb von GitHub gepflegt. Ändert sich dort etwas
+an Anforderungen, Paketen oder Terminen, wird es per Pull Request auch hier nachgezogen.
+
+## Termine
+
+| Datum | Termin | Milestone |
+|---|---|---|
+| 11.12.2026 | Plan freigegeben | Plan freigegeben |
+| 12.2.2027 | Zwischenstand bei Gabriele Hofmarcher (Import, Ein- und Austritte, Ausgetretene) | Zwischenstand Hofmarcher |
+| 12.3.2027 | Vorabnahme mit allen Funktionen | Vorabnahme Hofmarcher |
+| 19.3.2027 | Abnahme (letzter Schultag vor Ostern) | Abnahme |
+| 26.3.2027 | Projektende: Dokumentation und Präsentation | Projektende |
+
+## Team
+
+| Person | Rolle | Prüft Pull Requests von |
+|---|---|---|
+| Magdalena Stangl | Projektleitung, Entwicklung | Gobly-Heigl, Bsteh, Teufl, Kerschbaumer |
+| Thomas Gobly-Heigl | Entwicklung | Stangl |
+| Lukas Bsteh | Mitarbeit, Test | Stangl |
+| Dominik Teufl | Mitarbeit, Test | Stangl |
+| Dion Kerschbaumer | Mitarbeit, Test | – |
+
+Fachliche Entscheidungen und Abnahme: Gabriele Hofmarcher (FJ Genossenschaft).
+Plan besprochen und genehmigt von: Thomas Riegler.
 
 ## Starten
 
-1. Python 3 installieren (python.org, beim Installieren **„Add python.exe to PATH“** anhaken).
-2. Doppelklick auf **`Starten.bat`**. Beim ersten Start werden PyQt5 und openpyxl automatisch installiert.
-3. Zum Ausprobieren gibt es **`Demo starten.bat`**. Das öffnet eine eigene Demo-Datenbank mit rund 150
-   erfundenen Personen, die echten Daten bleiben davon unberührt.
-
-Alternativ: `pip install -r requirements.txt`, danach `python main.py` (bzw. `python main.py --demo`).
-
-Die Daten liegen in `daten/care.db`. Eine Sicherung legst du über **Mehr → Datenbank sichern** an.
-
-## Typischer Ablauf
-
-| Schritt | Wo im Programm |
-|---|---|
-| Klassenliste aus Excel übernehmen | **Excel importieren …** → Spalten prüfen → „Nur als Klassenliste übernehmen“ |
-| Beitrittserklärungen eintragen | Personen in der Liste anklicken (Strg/Umschalt für mehrere) → **Beitritt erfassen** |
-| Austrittserklärung eintragen | Mitglied(er) auswählen → **Austritt erfassen** (Datum + Grund) |
-| Details einer Person | Person anklicken: rechts erscheinen Mitgliedschaft, IBAN, Kontakt und der Verlauf |
-| Liste der Ausgetretenen | Seite **Ausgetretene** → **Liste als Excel speichern** (mit Auszahlungsbetrag und IBAN) |
-| Revisionsprüfung | Seite **Revision / Statistik** → Zeitraum und Stichtag wählen → **Revisionsbericht als Excel** |
-| Mitglieder informieren | Seite **Mitgliederinfo** → Adressen kopieren (ins BCC-Feld) → **Versand protokollieren** |
-
-## Funktionen
-
-- **Excel-Import** (.xlsx, .xls, .csv): Die Überschriftenzeile und die Spalten (Vorname, Nachname,
-  „Name komplett“, Klasse, Geburtsdatum, E-Mail, IBAN, Beitrittsdatum …) werden automatisch erkannt
-  und lassen sich per Auswahlliste ändern. Steht die Klasse nicht in der Liste, wird sie aus dem
-  Dateinamen übernommen (z. B. `Klassenliste_4IT.xlsx` → 4IT) oder kann eingetippt werden.
-  Doppelte Personen werden erkannt und nur ergänzt. Eine leere Vorlage gibt es unter
-  **Mehr → Importvorlage speichern**.
-- **Status** jeder Person: *Kein Mitglied*, *Mitglied*, *Austritt angemeldet* (Austrittsdatum liegt in der
-  Zukunft), *Ausgetreten*. Auch ein Wiedereintritt ist möglich.
-- **Mitglieds-Nummern** werden fortlaufend vergeben, **Geschäftsanteile** pro Mitglied erfasst
-  (Betrag pro Anteil unter **Mehr → Einstellungen**).
-- **Sortieren und Filtern**: Klick auf eine Spaltenüberschrift sortiert die Liste. Gefiltert wird nach
-  Status, Klasse und IBAN (fehlt/ungültig/gültig), dazu gibt es eine Volltextsuche.
-- **IBAN-System**: Prüfung mit Prüfziffer (Modulo 97), maskierte Anzeige (`AT61 •••• •••• •••• 3201`),
-  vollständige Anzeige über **Mehr → IBANs vollständig anzeigen** (unten in der Seitenleiste), Kopieren mit einem Klick.
-- **Verlauf** pro Person: Beitritt, Austritt, Änderungen, versendete Infos und Notizen mit Datum.
-- **Revision**: Mitgliederstand am Stichtag, Stand zu Beginn, Beitritte und Austritte im Zeitraum,
-  Anteile und Geschäftsguthaben, dazu Auswertungen nach Klasse (z. B. LWB 25), nach Jahr und nach
-  Austrittsgrund. Der Excel-Bericht enthält die Blätter Übersicht, Nach Klasse, Nach Jahr,
-  Mitglieder am Stichtag, Beitritte und Austritte.
-- **Export** jeder gefilterten Ansicht nach Excel (Strg+S).
-
-## Aufbau des Codes
-
-```
-main.py              Programmstart
-beispieldaten.py     erfundene Demo-Daten und Beispiel-Klassenlisten
-care/database.py     SQLite-Datenbank: Tabellen, Beitritt/Austritt, Auswertungen
-care/excel_io.py     Excel-Import (Spaltenerkennung) und Excel-Export
-care/iban_utils.py   IBAN prüfen, formatieren, maskieren
-care/dialogs.py      Dialoge: Person, Beitritt, Austritt, Import, Einstellungen
-care/ui_elemente.py  Design: Farben, Stylesheet, Karten, Kacheln, Status-Etiketten, Diagramme
-care/main_window.py  Hauptfenster mit Seitenleiste und vier Seiten
-beispiele/           zwei Beispiel-Klassenlisten zum Testen des Imports
-```
-
-### Datenbank
-
-- `personen`: Stammdaten, Bankverbindung und aktueller Stand der Mitgliedschaft
-- `ereignisse`: Verlauf (Beitritt, Austritt, Änderung, Info, Notiz). Die Zahlen für die Revision
-  werden aus dieser Tabelle berechnet, damit auch Wiedereintritte richtig gezählt werden.
-- `einstellungen`: Name der Genossenschaft, Betrag pro Anteil
+Folgt mit AP-01 (Grundgerüst).
 
 ## Datenschutz
 
-Die Datenbank enthält personenbezogene Daten und IBANs. Sie liegt nur lokal auf dem PC, deshalb
-gehört `daten/care.db` nicht in Cloud-Ordner oder E-Mails. Gesichert wird über **Datenbank sichern**
-auf einem geschützten Speicherort.
+Echte Klassenlisten, Mitgliederdaten und die Datenbankdatei kommen **nie** ins Repository.
+Zum Entwickeln und Testen gibt es nur erfundene Beispieldaten. Siehe [docs/ARBEITSWEISE.md](docs/ARBEITSWEISE.md#datenschutz-im-repository).
